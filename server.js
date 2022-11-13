@@ -4,6 +4,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const uuid = require('uuid')
+const db = require('./db/db.json')
 // Helper method for generating unique ids
 
 const PORT = process.env.PORT || 3001;
@@ -24,12 +25,12 @@ app.get('/notes', (req, res) =>
 );
 
 // GET request for reviews
-app.get('/api/reviews', (req, res) => {
+app.get('/api/notes', (req, res) => {
+  res.json(db)
   // Send a message to the client
-  res.json(`${req.method} request received to get reviews`);
+ // res.json(`${req.method} request received to get reviews`);
 
   // Log our request to the terminal
-  console.info(`${req.method} request received to get reviews`);
 });
 
 // POST request to add a review
