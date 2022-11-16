@@ -3,8 +3,10 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const uuid = require('uuid')
+const { v4: uuidv4 } = require('uuid');
 const db = require('./db/db.json')
+
+
 // Helper method for generating unique ids
 
 const PORT = process.env.PORT || 3001;
@@ -34,33 +36,31 @@ app.get('/api/notes', (req, res) => {
 });
 
 // POST request to add a review
-app.post('/api/reviews', (req, res) => {
-  // Log that a POST request was received
-  console.info(`${req.method} request received to add a review`);
+app.post('/api/notes', (req, res) => {
+
 
   // Destructuring assignment for the items in req.body
-  const { product, review, username } = req.body;
+  const { text, title } = req.body;
 
   // If all the required properties are present
-  if (product && review && username) {
+  if (text && title) {
     // Variable for the object we will save
-    const newReview = {
-      product,
-      review,
-      username,
-      upvotes: Math.floor(Math.random() * 100),
-      review_id: uuid(),
-    };
+    const newNote = {
+      text,
+      title,
+      id: uuidv4()// ⇨ '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed'
 
+    };
+db.push(newNote)
     // Convert the data to a string so we can save it
-    const reviewString = JSON.stringify(newReview);
+    const newNoteString = JSON.stringify(db);
 
     // Write the string to a file
-    fs.writeFile(`./db/${newReview.product}.json`, reviewString, (err) =>
+    fs.writeFile(`./db/db.json`, newNoteString, (err) =>
       err
         ? console.error(err)
         : console.log(
-            `Review for ${newReview.product} has been written to JSON file`
+          'file written'
           )
     );
 
